@@ -2,7 +2,7 @@
 
 Retired HackTheBox machine investigations, published by PerhapsLater.
 
-[Read the publication](https://perhapslater.com/writeups/) · [GitHub repository](https://github.com/perhapslater/writeups)
+[Read the publication](https://perhapslater.github.io/writeups/) · [GitHub repository](https://github.com/perhapslater/writeups)
 
 - Eleven investigations organized by platform and difficulty.
 - A searchable, filterable machine library and expandable evidence screenshots.
