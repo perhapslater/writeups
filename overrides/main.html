@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% set description = page.meta.description if page and page.meta and page.meta.description else config.site_description %}
+{% set title = page.title ~ ' Ã‚Â· ' ~ config.site_name if page and page.url else config.site_name %}
+{% block htmltitle %}<title>{{ title | e }}</title>{% endblock %}
+{% block extrahead %}
+  {{ super() }}
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#181b22">
+  {% if page %}
+  <meta property="og:type" content="{{ 'website' if not page.url else 'article' }}">
+  <meta property="og:site_name" content="{{ config.site_name | e }}">
+  <meta property="og:title" content="{{ title | e }}">
+  <meta property="og:description" content="{{ description | e }}">
+  <meta property="og:url" content="{{ page.canonical_url | e }}">
+  <meta property="og:image" content="{{ (config.site_url ~ 'assets/social-card.png') | e }}">
+  <meta property="og:image:alt" content="{{ config.site_name | e }} by PerhapsLater">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title | e }}">
+  <meta name="twitter:description" content="{{ description | e }}">
+  <meta name="twitter:image" content="{{ (config.site_url ~ 'assets/social-card.png') | e }}">
+  <script type="application/ld+json">{{ {'@context':'https://schema.org','@type':'WebSite' if not page.url else 'TechArticle','name':title,'description':description,'url':page.canonical_url,'author':{'@type':'Person','name':'PerhapsLater'},'isPartOf':{'@type':'WebSite','name':config.site_name,'url':config.site_url}} | tojson }}</script>
+  {% endif %}
+{% endblock %}

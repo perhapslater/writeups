@@ -1,0 +1,46 @@
+# Generated documentation and Python environments
+site/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.deps-download/
+.pytest_cache/
+.cache/
+
+# Local credentials and private working files
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.key
+*[Rr]esume*.pdf
+*[Rr]esume*.docx
+*.log
+
+# Editor, agent and planning state
+.agents/
+.claude/
+.cursor/
+.continue/
+.cody/
+.aider*
+.copilot/
+.windsurf/
+.codeium/
+.vscode/
+.idea/
+AGENTS.md
+CLAUDE.md
+CLAUDE.local.md
+GEMINI.md
+.cursorrules
+.github/copilot-instructions.md
+docs/superpowers/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

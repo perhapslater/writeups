@@ -1,0 +1,7 @@
+{# Static repository link: no background GitHub statistics request. #}
+<a href="{{ config.repo_url }}" title="{{ lang.t('source') }}" class="md-source" aria-label="{{ config.repo_name }}">
+  <span class="md-source__icon md-icon">
+    {% include ".icons/" ~ config.theme.icon.repo ~ ".svg" %}
+  </span>
+  <span class="md-source__repository">{{ config.repo_name }}</span>
+</a>

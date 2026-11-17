@@ -1,0 +1,11 @@
+PerhapsLater security publications
+
+Research references, tool authors, and lab-machine evidence retain their original
+attribution in the documentation. Hack The Box and referenced products are the
+names and marks of their respective owners; no affiliation is implied.
+
+The provided source did not include a root project license. This migration does
+not introduce a new license grant for the documentation or screenshots.
+
+The adapted Material for MkDocs header and footer retain the upstream MIT notice
+in THIRD_PARTY_LICENSES/mkdocs-material.txt. Dependencies retain their own licenses.

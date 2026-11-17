@@ -1,0 +1,87 @@
+site_name: HTB Writeups
+site_description: Retired HackTheBox investigations documenting enumeration, footholds, privilege escalation, and the evidence behind each decision.
+site_author: PerhapsLater
+site_url: !ENV [SITE_URL, "https://perhapslater.com/writeups/"]
+repo_url: https://github.com/perhapslater/writeups
+repo_name: perhapslater/writeups
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; PerhapsLater
+
+theme:
+  name: material
+  custom_dir: overrides
+  font: false
+  logo: assets/brand.svg
+  favicon: assets/brand.svg
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    scheme: slate
+    primary: custom
+    accent: cyan
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/publication.js
+
+extra:
+  generator: false
+  publication: writeups
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/perhapslater
+      name: PerhapsLater on GitHub
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - tables
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+hooks:
+  - hooks/publication.py
+
+nav:
+  - Home: index.md
+  - Active Directory:
+    - Administrator: active-directory/administrator.md
+    - Escape: active-directory/escape.md
+    - Cicada: active-directory/cicada.md
+  - Windows:
+    - Access: windows/access.md
+    - Jeeves: windows/jeeves.md
+  - Linux:
+    - Broker: linux/broker.md
+    - Busqueda: linux/busqueda.md
+    - Chemistry: linux/chemistry.md
+    - LinkVortex: linux/linkvortex.md
+    - Titanic: linux/titanic.md
+    - UpDown: linux/updown.md
