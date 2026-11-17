@@ -254,6 +254,7 @@
       dialog.querySelector("p").textContent = target.dataset.caption || "";
       dialog.querySelector(".pl-evidence-original").href = dialog.querySelector("img").src;
       dialog.showModal();
+      dialog.scrollTop = 0;
     }
   });
 
