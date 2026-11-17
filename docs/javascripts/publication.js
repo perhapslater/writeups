@@ -94,6 +94,57 @@
     render(false);
   }
 
+  function initializeCasePreviews() {
+    var root = document.querySelector("[data-case-previews]");
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = "true";
+    var slides = Array.prototype.slice.call(root.querySelectorAll("[data-case-preview]"));
+    var choices = Array.prototype.slice.call(root.querySelectorAll("[data-preview-go]"));
+    var index = 0;
+    var touchStart = null;
+    function show(next) {
+      index = (next + slides.length) % slides.length;
+      slides.forEach(function (slide, position) {
+        slide.hidden = position !== index;
+        slide.inert = position !== index;
+      });
+      choices.forEach(function (choice, position) {
+        if (position === index) choice.setAttribute("aria-current", "true");
+        else choice.removeAttribute("aria-current");
+      });
+      root.querySelector("[data-preview-status]").textContent = slides[index].dataset.caseName + ", " + (index + 1) + " of " + slides.length;
+    }
+    root.querySelector(".case-preview-controls").hidden = false;
+    root.querySelector(".case-preview-pagination").hidden = false;
+    root.querySelector("[data-preview-prev]").addEventListener("click", function () { show(index - 1); });
+    root.querySelector("[data-preview-next]").addEventListener("click", function () { show(index + 1); });
+    choices.forEach(function (choice) {
+      choice.addEventListener("click", function () { show(Number(choice.dataset.previewGo)); });
+    });
+    root.addEventListener("keydown", function (event) {
+      if (!event.target.closest("[data-preview-prev], [data-preview-next], [data-preview-go]")) return;
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        show(index + (event.key === "ArrowRight" ? 1 : -1));
+      }
+    });
+    root.addEventListener("pointerdown", function (event) {
+      touchStart = null;
+      if (event.pointerType === "mouse" || !event.isPrimary || event.target.closest("a, button, input, select")) return;
+      touchStart = {id:event.pointerId, x:event.clientX, y:event.clientY};
+    });
+    root.addEventListener("pointerup", function (event) {
+      if (!touchStart || touchStart.id !== event.pointerId) return;
+      var dx = event.clientX - touchStart.x;
+      var dy = event.clientY - touchStart.y;
+      touchStart = null;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) show(index + (dx < 0 ? 1 : -1));
+    });
+    root.addEventListener("pointercancel", function () { touchStart = null; });
+    show(0);
+  }
+
   function initializeLibrary() {
     var root = document.querySelector(".library");
     if (!root || root.dataset.ready) return;
@@ -252,7 +303,7 @@
     });
   }
 
-  function initialize() { initializeWorkbench(); initializeLibrary(); initializeEvidence(); initializeHeader(); }
+  function initialize() { initializeWorkbench(); initializeLibrary(); initializeEvidence(); initializeHeader(); initializeCasePreviews(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, {once:true});
   else initialize();
   if (typeof document$ !== "undefined") document$.subscribe(initialize);

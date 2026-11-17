@@ -17,8 +17,6 @@ __pycache__/
 *.pem
 *.pfx
 *.key
-*[Rr]esume*.pdf
-*[Rr]esume*.docx
 *.log
 
 # Editor, agent and planning state

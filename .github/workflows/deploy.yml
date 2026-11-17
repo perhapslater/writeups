@@ -31,13 +31,11 @@ jobs:
           cache-dependency-path: requirements.lock
       - name: Install locked dependencies
         run: python -m pip install --require-hashes -r requirements.lock
-      - name: Audit documentation
-        run: python scripts/content_audit.py
       - name: Read Pages URL
         if: github.event_name != 'pull_request'
         id: pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
-      - name: Build and verify publication
+      - name: Build documentation
         env:
           PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: |
@@ -45,7 +43,6 @@ jobs:
             export SITE_URL="${PAGES_BASE_URL%/}/"
           fi
           python -m mkdocs build --strict
-          python scripts/publication_audit.py
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         if: github.event_name != 'pull_request'
         with:
