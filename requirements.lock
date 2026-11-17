@@ -1,7 +1,6 @@
-# Reviewed pins for MkDocs Material 9.7.7.
-# SHA-256 hashes cover PyPI release distributions, including Windows and Linux wheels.
-# Python 3.12 (GitHub Pages) and Python 3.14 (local verification).
-# Update pins intentionally, review advisories, and regenerate hashes from PyPI.
+# Locked dependencies for MkDocs Material 9.7.7.
+# SHA-256 hashes verify PyPI distribution files.
+# Update package versions and hashes together.
 
 Babel==2.18.0 \
     --hash=sha256:b80b99a14bd085fcacfa15c9165f651fbb3406e66cc603abf11c5750937c992d \

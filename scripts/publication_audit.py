@@ -1,7 +1,6 @@
 """Validate publication output without making network requests.
 
-Optional PUBLICATION_DENY_TERMS is a JSON list used only by a local audit. Do not
-put private identities in this script or in public workflow configuration.
+PUBLICATION_DENY_TERMS optionally supplies additional forbidden strings as a JSON list.
 """
 from __future__ import annotations
 
