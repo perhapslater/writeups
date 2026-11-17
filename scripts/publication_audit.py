@@ -24,16 +24,21 @@ class Page(HTMLParser):
     def __init__(self, path):
         super().__init__(convert_charrefs=True)
         self.path, self.ids, self.links, self.meta, self.canonicals = path, set(), [], {}, []
+        self.title_parts, self.in_title, self.charset = [], False, None
         self.feed(path.read_text(encoding="utf-8"))
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == "title":
+            self.in_title = True
         if "id" in a:
             self.ids.add(a["id"])
         if tag == "a" and "name" in a:
             self.ids.add(a["name"])
         if tag == "meta":
             self.meta[a.get("property", a.get("name", ""))] = a.get("content", "")
+            if "charset" in a:
+                self.charset = a["charset"].lower()
         if tag == "link" and a.get("rel") == "canonical":
             self.canonicals.append(a.get("href", ""))
         for name in ("href", "src", "poster"):
@@ -41,6 +46,14 @@ class Page(HTMLParser):
                 self.links.append((tag, name, a[name]))
         if "srcset" in a:
             self.links.extend((tag, "src", item.strip().split()[0]) for item in a["srcset"].split(",") if item.strip())
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self.in_title = False
+
+    def handle_data(self, data):
+        if self.in_title:
+            self.title_parts.append(data)
 
 
 def main():
@@ -81,6 +94,17 @@ def main():
         # Hand-authored redirects intentionally canonicalize to the replacement page.
         redirect = "http-equiv=\"refresh\"" in page.path.read_text(encoding="utf-8").lower()
         if not redirect:
+            title = "".join(page.title_parts).strip()
+            if not title:
+                errors.append(f"{relative}: missing document title")
+            if page.charset != "utf-8":
+                errors.append(f"{relative}: missing UTF-8 charset")
+            titles = {"title": title, "og:title": page.meta.get("og:title", ""), "twitter:title": page.meta.get("twitter:title", "")}
+            for field, value in titles.items():
+                if any(marker in value for marker in ("\u00c3\u201a\u00c2\u00b7", "\u00c2\u00b7", "\ufffd")):
+                    errors.append(f"{relative}: corrupt title encoding in {field}")
+            if titles["og:title"] != title or titles["twitter:title"] != title:
+                errors.append(f"{relative}: inconsistent document and social titles")
             if page.canonicals != [page_url]:
                 errors.append(f"{relative}: incorrect canonical: {page.canonicals!r}; expected {page_url}")
             if page.meta.get("og:url") != page_url:
