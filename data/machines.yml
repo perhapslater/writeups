@@ -1,0 +1,405 @@
+- name: Administrator
+  path: active-directory/administrator.md
+  platform: Active Directory
+  difficulty: Medium
+  description: An ACL reset chain to Kerberoasting and DCSync.
+  techniques: ACL abuse / DCSync
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/634
+- name: Escape
+  path: active-directory/escape.md
+  platform: Active Directory
+  difficulty: Medium
+  description: An exposed document, a SQL foothold, and a vulnerable certificate template.
+  techniques: MSSQL / ADCS ESC1
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/531
+  preview:
+    summary: Follow an exposed SMB document through MSSQL access to an AD CS certificate-template
+      weakness.
+    stages:
+    - label: Discover
+      value: SMB document
+    - label: Access
+      value: MSSQL
+    - label: Escalate
+      value: AD CS ESC1
+    order: 0
+- name: Cicada
+  path: active-directory/cicada.md
+  platform: Active Directory
+  difficulty: Easy
+  description: Patient SMB and LDAP enumeration leads to backup privileges.
+  techniques: SMB / SeBackupPrivilege
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/627
+- name: Access
+  path: windows/access.md
+  platform: Windows
+  difficulty: Easy
+  description: Recover credentials from FTP artifacts and follow the cached access.
+  techniques: FTP / Credential recovery
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/156
+- name: Jeeves
+  path: windows/jeeves.md
+  platform: Windows
+  difficulty: Medium
+  description: Jenkins execution, token impersonation, and a hidden NTFS stream.
+  techniques: Jenkins / Impersonation
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/114
+  preview:
+    summary: From Jenkins script execution to SYSTEM through token impersonation,
+      with a final NTFS-stream twist.
+    stages:
+    - label: Discover
+      value: Jenkins
+    - label: Access
+      value: Script Console
+    - label: Escalate
+      value: Token impersonation
+    order: 2
+- name: Broker
+  path: linux/broker.md
+  platform: Linux
+  difficulty: Easy
+  description: ActiveMQ execution and a dangerous sudo rule for nginx.
+  techniques: ActiveMQ / nginx
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/578
+  preview:
+    summary: Turn an ActiveMQ flaw into a foothold, then use a permissive nginx sudo
+      rule to read root's files.
+    stages:
+    - label: Discover
+      value: ActiveMQ
+    - label: Access
+      value: OpenWire RCE
+    - label: Escalate
+      value: sudo nginx
+    order: 1
+- name: Busqueda
+  path: linux/busqueda.md
+  platform: Linux
+  difficulty: Easy
+  description: Searchor injection, Git secrets, and relative-path abuse.
+  techniques: Searchor / Docker
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/537
+- name: Chemistry
+  path: linux/chemistry.md
+  platform: Linux
+  difficulty: Easy
+  description: Chain two Python CVEs from file upload to root SSH access.
+  techniques: pymatgen / aiohttp
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/631
+- name: LinkVortex
+  path: linux/linkvortex.md
+  platform: Linux
+  difficulty: Easy
+  description: Exposed Git history and symlink primitives from web access to root.
+  techniques: Ghost / Symlinks
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/638
+- name: Titanic
+  path: linux/titanic.md
+  platform: Linux
+  difficulty: Easy
+  description: Follow a file-read primitive through Gitea to ImageMagick execution.
+  techniques: Gitea / ImageMagick
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/648
+- name: UpDown
+  path: linux/updown.md
+  platform: Linux
+  difficulty: Medium
+  description: A layered web chain through Git disclosure, PHAR, and sudo.
+  techniques: PHAR / GTFOBins
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://www.hackthebox.com/machines/updown
+- name: Alert
+  path: linux/alert.md
+  platform: Linux
+  description: A shared Markdown preview exposes an administrator-only file read;
+    a writable monitor configuration finishes the chain.
+  techniques: Stored XSS / File read / PHP
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/636
+  htb: https://app.hackthebox.com/machines/636
+- name: Cap
+  path: linux/cap.md
+  platform: Linux
+  description: An older packet capture exposes FTP credentials, and Python's setuid
+    capability turns SSH access into root.
+  techniques: IDOR / PCAP / Linux capabilities
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/351
+  htb: https://app.hackthebox.com/machines/351
+  preview:
+    summary: Read an older network capture, recover a plaintext login, and turn a
+      Python capability into root.
+    stages:
+    - label: Discover
+      value: PCAP IDOR
+    - label: Access
+      value: FTP password reuse
+    - label: Escalate
+      value: Python cap_setuid
+    order: 3
+- name: CodePartTwo
+  path: linux/codeparttwo.md
+  platform: Linux
+  description: A js2py escape leads to SQLite credentials and a root-run backup client
+    with an attacker-controlled configuration.
+  techniques: js2py / SQLite / Backup abuse
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/692
+  htb: https://app.hackthebox.com/machines/692
+  difficulty: Easy
+- name: Conversor
+  path: linux/conversor.md
+  platform: Linux
+  description: An unsafe XSLT converter exposes a user database; sudo needrestart
+    then loads a malicious Python module.
+  techniques: XSLT injection / Hash cracking / needrestart
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/787
+  htb: https://app.hackthebox.com/machines/787
+  difficulty: Easy
+- name: Editor
+  path: linux/editor.md
+  platform: Linux
+  description: XWiki execution exposes reusable credentials, followed by a Netdata
+    ndsudo search-path hijack.
+  techniques: XWiki / Credential reuse / PATH hijack
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/684
+  htb: https://app.hackthebox.com/machines/684
+  difficulty: Easy
+- name: Expressway
+  path: linux/expressway.md
+  platform: Linux
+  description: An IKE aggressive-mode exchange exposes crackable PSK material; password
+    reuse and a sudo chroot flaw complete the path.
+  techniques: IKE / PSK cracking / sudo chroot
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/736
+  htb: https://app.hackthebox.com/machines/736
+- name: Facts
+  path: linux/facts.md
+  platform: Linux
+  description: Camaleon CMS exposes a file-read path to an encrypted SSH key, followed
+    by sudo Facter custom-fact execution.
+  techniques: Camaleon CMS / File read / Facter
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/829
+  htb: https://app.hackthebox.com/machines/829
+- name: Help
+  path: linux/help.md
+  platform: Linux
+  description: GraphQL leaks helpdesk credentials, a rejected upload still executes,
+    and a local kernel exploit yields root.
+  techniques: GraphQL / HelpDeskZ / Kernel exploit
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/170
+  htb: https://app.hackthebox.com/machines/170
+- name: Imagery
+  path: linux/imagery.md
+  platform: Linux
+  description: A stolen administrator session unlocks file reads, image-command injection,
+    encrypted backups, and a root-run scheduler.
+  techniques: XSS / Command injection / Charcol
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/751
+  htb: https://app.hackthebox.com/machines/751
+  difficulty: Medium
+- name: Instant
+  path: linux/instant.md
+  platform: Linux
+  description: A token embedded in an APK opens an administrative API; a Solar-PuTTY
+    backup reveals the root password.
+  techniques: APK reversing / File read / Solar-PuTTY
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/630
+  htb: https://app.hackthebox.com/machines/630
+- name: Orion
+  path: linux/orion.md
+  platform: Linux
+  description: Craft CMS execution exposes a database password; an overlooked local
+    Telnet service provides the root path.
+  techniques: Craft CMS / Database hashes / Telnet
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/945
+  htb: https://app.hackthebox.com/machines/945
+- name: Outbound
+  path: linux/outbound.md
+  platform: Linux
+  description: Roundcube execution exposes encrypted session credentials, mail reveals
+    an SSH password, and below enables root access.
+  techniques: Roundcube / Triple DES / below
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/672
+  htb: https://app.hackthebox.com/machines/672
+- name: Previous
+  path: linux/previous.md
+  platform: Linux
+  description: A middleware bypass exposes Next.js build artifacts and credentials;
+    Terraform provider resolution crosses the root boundary.
+  techniques: Next.js / Path traversal / Terraform
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/701
+  htb: https://app.hackthebox.com/machines/701
+  difficulty: Medium
+- name: Reactor
+  path: linux/reactor.md
+  platform: Linux
+  description: React Server Components execution exposes an engineer account, while
+    a root-owned Node inspector supplies the final shell.
+  techniques: React2Shell / SQLite / Node Inspector
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/900
+  htb: https://app.hackthebox.com/machines/900
+- name: Sau
+  path: linux/sau.md
+  platform: Linux
+  description: A request-basket proxy reaches internal Maltrail; a sudo systemctl
+    pager then opens a root shell.
+  techniques: SSRF / Maltrail / systemctl pager
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/551
+  htb: https://app.hackthebox.com/machines/551
+  difficulty: Easy
+- name: SmartHire
+  path: linux/smarthire.md
+  platform: Linux
+  description: An MLflow foothold reaches a privileged Python script that processes
+    .pth files from a writable plugin directory.
+  techniques: MLflow / Python .pth / Sudo
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/897
+  htb: https://app.hackthebox.com/machines/897
+- name: Soulmate
+  path: linux/soulmate.md
+  platform: Linux
+  description: CrushFTP administrator access leads to a PHP shell and SSH credentials;
+    an internal Erlang SSH service runs commands as root.
+  techniques: CrushFTP / PHP upload / Erlang SSH
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/721
+  htb: https://app.hackthebox.com/machines/721
+- name: UnderPass
+  path: linux/underpass.md
+  platform: Linux
+  description: SNMP identifies daloRADIUS; default operator credentials and a sudo
+    Mosh server lead to root.
+  techniques: SNMP / daloRADIUS / Mosh
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/641
+  htb: https://app.hackthebox.com/machines/641
+  difficulty: Easy
+- name: Chatterbox
+  path: windows/chatterbox.md
+  platform: Windows
+  description: An AChat overflow gives Alfred a shell; inherited Desktop permissions
+    expose a path to the protected proof file.
+  techniques: AChat / Registry credentials / File ACLs
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/123
+  htb: https://app.hackthebox.com/machines/123
+- name: MonitorsFour
+  path: windows/monitorsfour.md
+  platform: Windows
+  description: An API token flaw exposes Cacti credentials, then an unauthenticated
+    Docker API opens the Windows host filesystem.
+  techniques: API authorization / Cacti / Docker Desktop
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/814
+  htb: https://app.hackthebox.com/machines/814
+  difficulty: Easy
+- name: Puppy
+  path: active-directory/puppy.md
+  platform: Active Directory
+  description: Group rights unlock a KeePass backup; account takeover and DPAPI recovery
+    lead to an administrative WinRM login.
+  techniques: AD ACLs / KeePass / DPAPI
+  eligibility:
+    state: retired
+    checked: '2026-11-17'
+    evidence: https://labs.hackthebox.com/achievement/machine/2048041/661
+  htb: https://app.hackthebox.com/machines/661
+  difficulty: Medium
+  preview:
+    summary: Follow AD group rights through a KeePass backup and account takeover
+      to a DPAPI credential recovery.
+    stages:
+    - label: Discover
+      value: Developers group ACL
+    - label: Access
+      value: KeePass and WinRM
+    - label: Escalate
+      value: DPAPI credentials
+    order: 4

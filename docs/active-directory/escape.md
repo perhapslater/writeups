@@ -146,7 +146,7 @@ upload Certify.exe
 .\Certify.exe find /vulnerable
 ```
 
-Certify flags a template where `Authenticated Users` can enroll and the `msPKI-Certificate-Name-Flag` contains `ENROLLEE_SUPPLIES_SUBJECT`. That is the [ESC1](https://m365internals.com/2022/11/07/investigating-certificate-template-enrollment-attacks-adcs/) condition: any enrollee can request a certificate with an arbitrary Subject Alternative Name, so we can request one as the domain administrator.
+Certify flags a template where `Authenticated Users` can enroll and the `msPKI-Certificate-Name-Flag` contains `ENROLLEE_SUPPLIES_SUBJECT`. That is the [ESC1](https://specterops.io/wp-content/uploads/sites/3/2022/06/Certified_Pre-Owned.pdf) condition: any enrollee can request a certificate with an arbitrary Subject Alternative Name, so we can request one as the domain administrator.
 
 <figure class="wu-evidence" markdown>
 ![Certify identifies the UserAuthentication template as a vulnerable certificate template.](../assets/images/machines/escape-vulnerable-template.png)

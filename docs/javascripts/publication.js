@@ -171,7 +171,7 @@
       var visible = 0;
       cards.forEach(function (card) {
         var matches = (platform.value === "All platforms" || card.dataset.platform === platform.value) &&
-          (difficulty.value === "Any difficulty" || card.querySelector(".difficulty").textContent === difficulty.value) &&
+          (difficulty.value === "Any difficulty" || card.dataset.difficulty === difficulty.value) &&
           card.textContent.toLowerCase().indexOf(query) >= 0;
         card.hidden = !matches;
         if (matches) visible++;

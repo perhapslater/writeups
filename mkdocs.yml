@@ -1,7 +1,7 @@
 site_name: HTB Writeups
 site_description: Retired HackTheBox investigations documenting enumeration, footholds, privilege escalation, and the evidence behind each decision.
 site_author: PerhapsLater
-site_url: !ENV [SITE_URL, "https://perhapslater.com/writeups/"]
+site_url: !ENV [SITE_URL, "https://perhapslater.github.io/writeups/"]
 repo_url: https://github.com/perhapslater/writeups
 repo_name: perhapslater/writeups
 edit_uri: edit/main/docs/
@@ -69,19 +69,4 @@ plugins:
 hooks:
   - hooks/publication.py
 
-nav:
-  - Home: index.md
-  - Active Directory:
-    - Administrator: active-directory/administrator.md
-    - Escape: active-directory/escape.md
-    - Cicada: active-directory/cicada.md
-  - Windows:
-    - Access: windows/access.md
-    - Jeeves: windows/jeeves.md
-  - Linux:
-    - Broker: linux/broker.md
-    - Busqueda: linux/busqueda.md
-    - Chemistry: linux/chemistry.md
-    - LinkVortex: linux/linkvortex.md
-    - Titanic: linux/titanic.md
-    - UpDown: linux/updown.md
+# Navigation, homepage cards, counts, and filter options use data/machines.yml.
