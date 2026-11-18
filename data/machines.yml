@@ -19,16 +19,15 @@
     checked: '2026-11-17'
     evidence: https://labs.hackthebox.com/achievement/machine/2048041/531
   preview:
-    summary: Follow an exposed SMB document through MSSQL access to an AD CS certificate-template
-      weakness.
-    stages:
-    - label: Discover
-      value: SMB document
-    - label: Access
-      value: MSSQL
-    - label: Escalate
-      value: AD CS ESC1
     order: 0
+    summary: A PDF in the public SMB share pointed the investigation toward SQL Server.
+    anchor: smb
+    image:
+      path: assets/images/machines/escape-smb-share.png
+      alt: An SMB directory listing with SQL Server Procedures.pdf highlighted.
+    prompt: 'smb: \>'
+    command: ls
+    highlight: SQL Server Procedures.pdf
 - name: Cicada
   path: active-directory/cicada.md
   platform: Active Directory
@@ -60,16 +59,15 @@
     checked: '2026-11-17'
     evidence: https://labs.hackthebox.com/achievement/machine/2048041/114
   preview:
-    summary: From Jenkins script execution to SYSTEM through token impersonation,
-      with a final NTFS-stream twist.
-    stages:
-    - label: Discover
-      value: Jenkins
-    - label: Access
-      value: Script Console
-    - label: Escalate
-      value: Token impersonation
     order: 2
+    summary: The enabled privilege showed that the Jenkins account could impersonate an authenticated client.
+    anchor: privilege-escalation
+    image:
+      path: assets/images/machines/jeeves-seimpersonate.png
+      alt: The Windows privilege listing highlights SeImpersonatePrivilege as enabled.
+    prompt: '>'
+    command: whoami /priv
+    highlight: SeImpersonatePrivilege  Enabled
 - name: Broker
   path: linux/broker.md
   platform: Linux
@@ -81,16 +79,17 @@
     checked: '2026-11-17'
     evidence: https://labs.hackthebox.com/achievement/machine/2048041/578
   preview:
-    summary: Turn an ActiveMQ flaw into a foothold, then use a permissive nginx sudo
-      rule to read root's files.
-    stages:
-    - label: Discover
-      value: ActiveMQ
-    - label: Access
-      value: OpenWire RCE
-    - label: Escalate
-      value: sudo nginx
     order: 1
+    summary: The OpenWire result identified ActiveMQ behind a collection of seemingly unrelated ports.
+    anchor: nmap-results
+    prompt: $
+    command: sudo nmap -p$ports -sC -sV $IP -oA scan_tcp
+    output: |-
+      PORT      STATE  SERVICE
+      22/tcp    open   ssh
+      80/tcp    open   http
+      1883/tcp  open   mqtt
+    highlight: 61616/tcp open   ActiveMQ OpenWire
 - name: Busqueda
   path: linux/busqueda.md
   platform: Linux
@@ -164,16 +163,14 @@
     evidence: https://labs.hackthebox.com/achievement/machine/2048041/351
   htb: https://app.hackthebox.com/machines/351
   preview:
-    summary: Read an older network capture, recover a plaintext login, and turn a
-      Python capability into root.
-    stages:
-    - label: Discover
-      value: PCAP IDOR
-    - label: Access
-      value: FTP password reuse
-    - label: Escalate
-      value: Python cap_setuid
     order: 3
+    summary: The dashboard offered a packet capture, giving the investigation network traffic to examine.
+    anchor: '80'
+    image:
+      path: assets/images/machines/cap/evidence-01.png
+      alt: The dashboard menu highlights Security Snapshot, a packet capture option.
+    command: GET /
+    highlight: Security Snapshot
 - name: CodePartTwo
   path: linux/codeparttwo.md
   platform: Linux
@@ -393,13 +390,11 @@
   htb: https://app.hackthebox.com/machines/661
   difficulty: Medium
   preview:
-    summary: Follow AD group rights through a KeePass backup and account takeover
-      to a DPAPI credential recovery.
-    stages:
-    - label: Discover
-      value: Developers group ACL
-    - label: Access
-      value: KeePass and WinRM
-    - label: Escalate
-      value: DPAPI credentials
     order: 4
+    summary: The directory record showed that the account was disabled, explaining the failed login.
+    anchor: account-takeover-enabling-disabled-accounts
+    image:
+      path: assets/images/machines/puppy/evidence-09.png
+      alt: The BloodHound object information panel highlights the account's disabled state.
+    command: BloodHound / Object Information
+    highlight: 'Enabled: FALSE'

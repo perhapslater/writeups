@@ -1,4 +1,5 @@
 import importlib.util
+from html import escape
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
@@ -89,12 +90,21 @@ class CatalogTests(unittest.TestCase):
 
     def test_preview_labels_and_controls_use_the_same_collection(self):
         catalog = publication.load_catalog(ROOT)
-        slides, buttons, status = publication.investigation_previews(catalog)
-        count = sum(bool(machine.get("preview")) for machine in catalog)
-        self.assertEqual(slides.count('data-case-preview '), count)
-        self.assertEqual(buttons.count('data-preview-go='), count)
-        self.assertIn(f"1 of {count}", status)
-        self.assertIn(f"{count} of {count}", slides)
+        slides, buttons = publication.investigation_previews(catalog)
+        selected = sorted((machine for machine in catalog if machine.get("preview")),
+                          key=lambda machine: machine["preview"]["order"])
+        self.assertEqual(slides.count('data-case-preview '), len(selected))
+        self.assertEqual(buttons.count('data-preview-go='), len(selected))
+        self.assertEqual(buttons.count('aria-current="true"'), 1)
+        for index, machine in enumerate(selected):
+            preview = machine["preview"]
+            name = escape(machine["name"])
+            route = machine["path"].removesuffix(".md") + "/"
+            self.assertIn(f'aria-label="{name}, {index + 1} of {len(selected)}"', slides)
+            self.assertIn(f'href="{escape(route)}#{escape(preview["anchor"])}"', slides)
+            self.assertIn(f'<mark>{escape(preview["highlight"])}</mark>', slides)
+            current = ' aria-current="true"' if index == 0 else ""
+            self.assertIn(f'data-preview-go="{index}"{current}>{name}</button>', buttons)
 
 
 if __name__ == "__main__":

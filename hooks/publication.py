@@ -97,30 +97,43 @@ def investigation_previews(machines):
                       key=lambda machine: machine["preview"]["order"])
     slides, buttons = [], []
     for index, machine in enumerate(selected):
+        preview = machine["preview"]
         name = escape(machine["name"])
         platform = "Windows / Active Directory" if machine["platform"] == "Active Directory" else machine["platform"]
         level = escape(machine.get("difficulty") or "Unspecified")
         url = escape(machine["path"].removesuffix(".md") + "/")
+        finding = f'{url}#{escape(preview["anchor"])}'
         hidden = " hidden" if index else ""
-        stages = "".join(
-            '<li><span class="case-preview-node" aria-hidden="true"></span>'
-            f'<span class="case-preview-stage">{escape(stage["label"])}</span><strong>{escape(stage["value"])}</strong></li>'
-            for stage in machine["preview"]["stages"]
-        )
+        image = preview.get("image")
+        visual = ""
+        if image:
+            slug = escape(Path(machine["path"]).stem)
+            visual = (
+                f'<div class="case-preview-visual case-preview-visual-{slug}">'
+                '<div class="case-preview-capture">'
+                f'<img src="{escape(image["path"])}" alt="{escape(image["alt"])}"></div></div>'
+            )
+        prompt = preview.get("prompt")
+        command = escape(preview["command"])
+        if prompt:
+            command = f'<span class="case-preview-prompt" aria-hidden="true">{escape(prompt)} </span>{command}'
+        output = escape(preview["output"]) + "\n" if preview.get("output") else ""
+        terminal = "case-preview-terminal" if image else "case-preview-terminal case-preview-terminal-full"
         slides.append(
-            f'<article class="case-preview" data-case-preview data-case-name="{name}" role="group" '
+            '<article class="case-preview" data-case-preview role="group" '
             f'aria-roledescription="slide" aria-label="{name}, {index + 1} of {len(selected)}"{hidden}>'
-            f'<div class="case-preview-meta"><span>{escape(platform)}</span>'
+            f'<div class="case-preview-heading"><div><h3><a href="{url}">{name}</a></h3>'
+            f'<p class="case-preview-platform">{escape(platform)}</p></div>'
             f'<span class="case-preview-difficulty case-preview-difficulty-{level.lower()}">{level}</span></div>'
-            f'<h3><a href="{url}">{name}</a></h3>'
-            f'<p class="case-preview-summary">{escape(machine["preview"]["summary"])}</p>'
-            f'<ol class="case-preview-path" aria-label="{name} attack path">{stages}</ol>'
-            f'<a class="button primary case-preview-read" href="{url}">Read {name}</a></article>'
+            f'<div class="case-preview-evidence no-copy">{visual}'
+            f'<pre class="{terminal}"><code>{command}\n{output}<mark>{escape(preview["highlight"])}</mark></code></pre></div>'
+            f'<p class="case-preview-caption">{escape(preview["summary"])}</p>'
+            f'<a class="case-preview-read" href="{finding}" aria-label="See this finding in {name}">'
+            'See this finding <span aria-hidden="true">&rarr;</span></a></article>'
         )
         current = ' aria-current="true"' if index == 0 else ""
-        buttons.append(f'<button type="button" data-preview-go="{index}" aria-label="Show {name}"{current}><span></span></button>')
-    status = f'{escape(selected[0]["name"])}, 1 of {len(selected)}' if selected else ""
-    return "".join(slides), "".join(buttons), status
+        buttons.append(f'<button type="button" data-preview-go="{index}"{current}>{name}</button>')
+    return "".join(slides), "".join(buttons)
 
 
 def on_page_markdown(markdown, page, config, files):
@@ -128,13 +141,12 @@ def on_page_markdown(markdown, page, config, files):
         return markdown
     difficulties = [level for level in ("Easy", "Medium", "Hard", "Insane", "Unspecified")
                     if any((machine.get("difficulty") or "Unspecified") == level for machine in _machines)]
-    slides, buttons, status = investigation_previews(_machines)
+    slides, buttons = investigation_previews(_machines)
     return (markdown.replace("{{ machine_count }}", str(len(_machines)))
             .replace("{{ machine_cards }}", machine_cards(_machines))
             .replace("{{ difficulty_options }}", "".join(f"<option>{level}</option>" for level in difficulties))
             .replace("{{ investigation_previews }}", slides)
-            .replace("{{ preview_buttons }}", buttons)
-            .replace("{{ first_preview_status }}", status))
+            .replace("{{ preview_buttons }}", buttons))
 
 
 def on_post_build(config):

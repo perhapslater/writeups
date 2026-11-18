@@ -97,13 +97,26 @@
   function initializeCasePreviews() {
     var root = document.querySelector("[data-case-previews]");
     if (!root || root.dataset.ready) return;
-    root.dataset.ready = "true";
     var slides = Array.prototype.slice.call(root.querySelectorAll("[data-case-preview]"));
+    if (slides.length < 2) return;
     var choices = Array.prototype.slice.call(root.querySelectorAll("[data-preview-go]"));
+    var previous = root.querySelector("[data-preview-prev]");
+    var next = root.querySelector("[data-preview-next]");
+    var playback = root.querySelector("[data-preview-playback]");
+    var status = root.querySelector("[data-preview-status]");
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var clock = root.querySelector("[data-preview-progress]").animate(
+      [{transform: "scaleX(0)"}, {transform: "scaleX(1)"}],
+      {duration: 8000, fill: "forwards"}
+    );
     var index = 0;
+    var autoRotate = !reducedMotion.matches;
+    var hovering = window.matchMedia("(hover: hover)").matches && root.matches(":hover");
+    var focused = root.contains(document.activeElement);
     var touchStart = null;
-    function show(next) {
-      index = (next + slides.length) % slides.length;
+
+    function show(position) {
+      index = (position + slides.length) % slides.length;
       slides.forEach(function (slide, position) {
         slide.hidden = position !== index;
         slide.inert = position !== index;
@@ -112,37 +125,108 @@
         if (position === index) choice.setAttribute("aria-current", "true");
         else choice.removeAttribute("aria-current");
       });
-      root.querySelector("[data-preview-status]").textContent = slides[index].dataset.caseName + ", " + (index + 1) + " of " + slides.length;
     }
-    root.querySelector(".case-preview-controls").hidden = false;
-    root.querySelector(".case-preview-pagination").hidden = false;
-    root.querySelector("[data-preview-prev]").addEventListener("click", function () { show(index - 1); });
-    root.querySelector("[data-preview-next]").addEventListener("click", function () { show(index + 1); });
-    choices.forEach(function (choice) {
-      choice.addEventListener("click", function () { show(Number(choice.dataset.previewGo)); });
+
+    function canRotate() {
+      return autoRotate && !hovering && !focused && !touchStart && !document.hidden && root.isConnected;
+    }
+
+    function updateClock() {
+      if (canRotate()) clock.play();
+      else clock.pause();
+    }
+
+    function setRotation(enabled) {
+      autoRotate = enabled;
+      playback.textContent = enabled ? "Pause" : "Play";
+      playback.setAttribute("aria-label", enabled ? "Pause automatic rotation" : "Play automatic rotation");
+      updateClock();
+    }
+
+    function select(position) {
+      setRotation(false);
+      clock.currentTime = 0;
+      show(position);
+      status.textContent = slides[index].getAttribute("aria-label");
+    }
+
+    clock.onfinish = function () {
+      if (!canRotate() || clock.playState !== "finished") return;
+      show(index + 1);
+      clock.currentTime = 0;
+      clock.play();
+    };
+    playback.addEventListener("click", function () {
+      if (!autoRotate) {
+        // An explicit Play takes effect even while the control is focused or hovered.
+        hovering = false;
+        focused = false;
+        status.textContent = "";
+      }
+      setRotation(!autoRotate);
     });
+    previous.addEventListener("click", function () { select(index - 1); });
+    next.addEventListener("click", function () { select(index + 1); });
+    choices.forEach(function (choice) {
+      choice.addEventListener("click", function () { select(Number(choice.dataset.previewGo)); });
+    });
+    root.addEventListener("pointerenter", function (event) {
+      if (event.pointerType === "touch") return;
+      hovering = true;
+      updateClock();
+    });
+    root.addEventListener("pointerleave", function (event) {
+      if (event.pointerType === "touch") return;
+      hovering = false;
+      updateClock();
+    });
+    root.addEventListener("focusin", function () {
+      focused = true;
+      updateClock();
+    });
+    root.addEventListener("focusout", function (event) {
+      if (root.contains(event.relatedTarget)) return;
+      focused = false;
+      updateClock();
+    });
+    document.addEventListener("visibilitychange", updateClock);
+    reducedMotion.addEventListener("change", function (event) {
+      if (event.matches) setRotation(false);
+    });
+
     root.addEventListener("keydown", function (event) {
       if (!event.target.closest("[data-preview-prev], [data-preview-next], [data-preview-go]")) return;
       if (event.altKey || event.ctrlKey || event.metaKey) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
-        show(index + (event.key === "ArrowRight" ? 1 : -1));
+        select(index + (event.key === "ArrowRight" ? 1 : -1));
+        if (event.target.closest("[data-preview-go]")) choices[index].focus();
       }
     });
     root.addEventListener("pointerdown", function (event) {
-      touchStart = null;
-      if (event.pointerType === "mouse" || !event.isPrimary || event.target.closest("a, button, input, select")) return;
-      touchStart = {id:event.pointerId, x:event.clientX, y:event.clientY};
+      if (event.pointerType === "mouse" || !event.isPrimary || event.target.closest("a, button")) return;
+      touchStart = {id: event.pointerId, x: event.clientX, y: event.clientY};
+      updateClock();
     });
     root.addEventListener("pointerup", function (event) {
       if (!touchStart || touchStart.id !== event.pointerId) return;
       var dx = event.clientX - touchStart.x;
       var dy = event.clientY - touchStart.y;
       touchStart = null;
-      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) show(index + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) select(index + (dx < 0 ? 1 : -1));
+      else updateClock();
     });
-    root.addEventListener("pointercancel", function () { touchStart = null; });
+    root.addEventListener("pointercancel", function (event) {
+      if (!touchStart || touchStart.id !== event.pointerId) return;
+      touchStart = null;
+      updateClock();
+    });
+
     show(0);
+    root.dataset.ready = "true";
+    root.querySelector(".case-preview-controls").hidden = false;
+    root.querySelector(".case-preview-pagination").hidden = false;
+    setRotation(autoRotate);
   }
 
   function initializeLibrary() {
